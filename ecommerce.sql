@@ -59,7 +59,7 @@ CREATE TABLE products(
 CREATE TABLE orders (
     orderid INT AUTO_INCREMENT PRIMARY KEY,
     customerid INT,
-    orderdate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    orderdate DATE NOT NULL DEFAULT (CURRENT_DATE), -- Previous code was "orderdate DATE NOT NULL DEFAULT CURRENT_TIMESTAMP," incorrect Syntax for DEFAULT, and DATE does not like being thrown timestamps, so MySQL freaked out.
     orderstatus ENUM('Pending', 'Shipping', 'Delivered', 'Cancelled') NOT NULL,
     ordertotal DECIMAL(7,2),
     FOREIGN KEY (customerid) REFERENCES customers(customerid)
