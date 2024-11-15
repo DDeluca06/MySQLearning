@@ -11,7 +11,8 @@
 --    - Create a new database for the e-commerce store.
 --    - Select the new database to use it for the following steps.
 
--- CREATE DATABASE commerce;
+CREATE DATABASE commerce;
+USE commerce;
 
 -- 2. **Create the Customers Table**
 --    - Design a table named `customers` to store customer information. 
@@ -20,18 +21,18 @@
 --    - Make sure the `customer_id` is unique and automatically increments for each new customer.
 --    - Set `email` to be unique to prevent duplicate entries.
 
--- CREATE TABLE customers(
--- customerid INT auto_increment unique PRIMARY KEY,
---    regdate DATE,
--- first_name VARCHAR(20) NOT NULL,
--- last_name VARCHAR(50) NOT NULL,
---   email VARCHAR(50) unique NOT NULL,
---    phone VARCHAR(15) unique NOT NULL,
---    address VARCHAR(90) unique NOT NULL,
---    city VARCHAR(58) NOT NULL,
---    state VARCHAR(2) NOT NULL,
---    zip VARCHAR(9) NOT NULL
--- );
+CREATE TABLE customers(
+    customerid INT auto_increment unique PRIMARY KEY,
+    regdate DATE,
+    first_name VARCHAR(20) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) unique NOT NULL,
+    phone VARCHAR(15) unique NOT NULL,
+    address VARCHAR(90) unique NOT NULL,
+    city VARCHAR(58) NOT NULL,
+    state VARCHAR(2) NOT NULL,
+    zip VARCHAR(9) NOT NULL
+);
 
 -- 3. **Create the Products Table**
 --    - Design a table named `products` to store product information available in the store.
@@ -39,14 +40,14 @@
 --    - Ensure the `product_id` is unique and automatically increments for each new product.
 --    - Set the `price` column to allow values with two decimal places.
 
--- CREATE TABLE products(
--- 	productid INT auto_increment UNIQUE PRIMARY KEY NOT NULL,
---     productname VARCHAR(20) UNIQUE NOT NULL,
---     productdesc TEXT NOT NULL,
---     productprice DECIMAL(4,2) NOT NULL,
---     productquantity INT NOT NULL,
---     productdate DATE NOT NULL
--- )
+CREATE TABLE products(
+    productid INT auto_increment UNIQUE PRIMARY KEY NOT NULL,
+    productname VARCHAR(20) UNIQUE NOT NULL,
+    productdesc TEXT NOT NULL,
+    productprice DECIMAL(4,2) NOT NULL,
+    productquantity INT NOT NULL,
+    productdate DATE NOT NULL
+ );
 
 -- 4. **Create the Orders Table**
 --    - Design a table named `orders` to store information about each order placed by customers.
@@ -55,14 +56,14 @@
 --    - Add a foreign key constraint linking `customer_id` in the `orders` table to the `customer_id` in the `customers` table.
 --    - Set a default value for the `order_date` column to the current date and time.
 
-CREATE TABLE orders(
-	 orderid INT auto_increment UNIQUE PRIMARY KEY NOT NULL,
-     customerid int,
-     FOREIGN KEY (customerid) REFERENCES customers(customerid),
-     orderdate DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     orderstatus ENUM('Pending', 'Shipping', 'Delivered', 'Cancelled') NOT NULL,
-     ordertotal DECIMAL(4,2)
- );
+CREATE TABLE orders (
+    orderid INT AUTO_INCREMENT PRIMARY KEY,
+    customerid INT,
+    orderdate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    orderstatus ENUM('Pending', 'Shipping', 'Delivered', 'Cancelled') NOT NULL,
+    ordertotal DECIMAL(7,2),
+    FOREIGN KEY (customerid) REFERENCES customers(customerid)
+);
 
 -- 5. **Create the Order Details Table**
 --    - Design a table named `order_details` to store details about each product within an order.
@@ -75,7 +76,7 @@ CREATE TABLE order_details (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
-    price_per_product DECIMAL(4, 2) NOT NULL,
+    price_per_product DECIMAL(7, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(orderid) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(productid) ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -138,9 +139,6 @@ JOIN order_details od ON p.productid = od.product_id
 SET p.productquantity = p.productquantity - od.quantity
 WHERE od.order_id = 1;  -- Replace `1` with the desired order ID.
 
--- EXTRA CODE: Altering table to add default to orderdate
-ALTER TABLE orders
-MODIFY COLUMN orderdate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 -- 8. **Consider Enhancements (Optional)**
 --    - How might you add a "category" column for products to categorize items in the store?
 --    - How would you track shipment dates for orders and delivery addresses if customers have multiple addresses?
