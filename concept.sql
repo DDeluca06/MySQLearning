@@ -40,9 +40,13 @@ SELECT * FROM my_events
 WHERE event_date BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY) + INTERVAL 1 SECOND;
 
 # Strings, CHAR vs VARCHAR
+# Storing Large Text
+# Storing Integers
 CREATE TABLE users(
+    user_id INT AUTO_INCREMENT,
 	username_char CHAR(10),
-    username_varchar VARCHAR(10)
+    username_varchar VARCHAR(10),
+    user_desc LONGTEXT,
 );
 
 INSERT INTO my_events.users(username_char, username_varchar)
@@ -70,3 +74,4 @@ CREATE TABLE orders(
     order_date DATETIME,
     order_total DECIMAL(10,2)
 );
+
